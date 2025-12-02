@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
-import cors from "cors";
 import morgan from "morgan";
+import errorHandler from "./middleware/errorHandler.js";
 
 import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
@@ -11,7 +11,6 @@ import universesRoutes from "./routes/universes.js";
 const app = express();
 
 app.use(helmet());
-app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 app.use(morgan("dev"));
 
@@ -20,21 +19,33 @@ app.use((req, res, next) => {
   next();
 });
 
+// Route racine - info API
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "API Echecs Mangas Backend",
+    version: "1.0.0",
+    endpoints: {
+      auth: "/api/auth",
+      products: "/api/products",
+      categories: "/api/categories",
+      universes: "/api/universes",
+    },
+  });
+});
+
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/universes", universesRoutes);
 
-// 404
+// 404 handler (conserver si tu en as besoin)
 app.use((req, res) => {
   res.status(404).json({ success: false, message: "Not Found" });
 });
 
-// error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(err.status || 500).json({ success: false, message: err.message || "Server error" });
-});
+// Remplacer le handler inline par le middleware d'erreur centralisé
+app.use(errorHandler);
 
 export default app;
