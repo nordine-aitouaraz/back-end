@@ -1,6 +1,11 @@
+import "dotenv/config";
 import mongoose from "mongoose";
 
-const uri = process.env.MONGODB_URI || "mongodb+srv://nordineaitdb_user:nrz92290%21@cluster0.qyuo0wh.mongodb.net/Cluster0?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error("❌ MONGODB_URI non défini dans .env");
+  process.exit(1);
+}
 
 (async () => {
   try {

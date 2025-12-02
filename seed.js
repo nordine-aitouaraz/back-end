@@ -19,7 +19,16 @@ const seedDatabase = async () => {
     await Category.deleteMany({});
     console.log("🧹 Base nettoyée (products/universes/categories).");
 
-    // 3. CRÉATION DES UNIVERS (exemple)
+    // 3. CRÉATION DES CATÉGORIES
+    await Category.create([
+      { name: "Pièces d'échecs", description: "Pièces individuelles et sets complets" },
+      { name: "Échiquiers", description: "Plateaux et échiquiers thématiques" },
+      { name: "Accessoires", description: "Pendules, sacs, boîtes de rangement" },
+      { name: "Collectors", description: "Éditions limitées et collectors" },
+    ]);
+    console.log("✅ Catégories créées.");
+
+    // 4. CRÉATION DES UNIVERS (exemple)
     await Universe.create({
       name: "Naruto",
       description: "L'univers ninja de Konoha et ses villages",
@@ -42,7 +51,7 @@ const seedDatabase = async () => {
     });
     console.log("✅ Univers créés.");
 
-    // 4. CREER UN ADMIN (idempotent)
+    // 5. CREER UN ADMIN (idempotent)
     const adminPhone = process.env.ADMIN_PHONE || "0700000000";
     const adminPassword = process.env.ADMIN_PASSWORD || "AdminPass123!";
     const adminExists = await User.findOne({ telephone: adminPhone });

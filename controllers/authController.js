@@ -58,3 +58,27 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Récupérer le profil de l'utilisateur connecté
+// @route   GET /api/auth/me
+// @access  Private
+export const getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
+    }
+    res.status(200).json({
+      success: true,
+      data: {
+        id_user: user.id_user,
+        nom: user.nom,
+        prenom: user.prenom,
+        telephone: user.telephone,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
