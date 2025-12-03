@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 import productsRoutes from "./routes/products.js";
 import categoriesRoutes from "./routes/categories.js";
 import universesRoutes from "./routes/universes.js";
+import favoritesRoutes from "./routes/favorites.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
       products: "/api/products",
       categories: "/api/categories",
       universes: "/api/universes",
+      favorites: "/api/favorites",
     },
   });
 });
@@ -39,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/universes", universesRoutes);
+app.use("/api/favorites", favoritesRoutes);
 
 // 404 handler (conserver si tu en as besoin)
 app.use((req, res) => {
