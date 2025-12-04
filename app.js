@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
 
 import authRoutes from "./routes/auth.js";
@@ -12,6 +13,7 @@ import favoritesRoutes from "./routes/favorites.js";
 const app = express();
 
 app.use(helmet());
+app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 app.use(morgan("dev"));
 
