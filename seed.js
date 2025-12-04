@@ -13,11 +13,12 @@ const seedDatabase = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("🔌 Connecté à MongoDB...");
 
-    // 2. NETTOYAGE (ne pas supprimer les users)
+    // 2. NETTOYAGE
     await Product.deleteMany({});
     await Universe.deleteMany({});
     await Category.deleteMany({});
-    console.log("🧹 Base nettoyée (products/universes/categories).");
+    await User.deleteMany({}); // Nettoyer aussi les users
+    console.log("🧹 Base nettoyée complètement.");
 
     // 3. CRÉATION DES CATÉGORIES
     await Category.create([
@@ -378,22 +379,23 @@ const seedDatabase = async () => {
     await Product.insertMany(products);
     console.log(`✅ ${products.length} produits créés.`);
 
-    // 7. CREER UN ADMIN (idempotent)
-    const adminPhone = process.env.ADMIN_PHONE || "0700000000";
+    // 7. CRÉER UN ADMIN avec le nouveau schéma (email)
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@echecsmangas.com";
     const adminPassword = process.env.ADMIN_PASSWORD || "AdminPass123!";
-    const adminExists = await User.findOne({ telephone: adminPhone });
+    
+    const adminExists = await User.findOne({ email: adminEmail });
 
     if (!adminExists) {
       const admin = await User.create({
-        nom: "Admin",
-        prenom: "Root",
-        telephone: adminPhone,
-        password: adminPassword, // hashé par le pre('save') du modèle
+        prenom: "Admin",
+        nom: "Root",
+        email: adminEmail,
+        password: adminPassword,
         role: "admin",
       });
-      console.log("🔐 Admin créé:", admin.telephone);
+      console.log("🔐 Admin créé:", admin.email);
     } else {
-      console.log("🔐 Admin déjà présent:", adminExists.telephone);
+      console.log("🔐 Admin déjà présent:", adminExists.email);
     }
 
     console.log("✅ Seed terminé.");
