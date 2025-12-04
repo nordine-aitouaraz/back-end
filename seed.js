@@ -382,7 +382,7 @@ const seedDatabase = async () => {
     // 7. CRÉER UN ADMIN avec le nouveau schéma (email)
     const adminEmail = process.env.ADMIN_EMAIL || "admin@echecsmangas.com";
     const adminPassword = process.env.ADMIN_PASSWORD || "AdminPass123!";
-    
+
     const adminExists = await User.findOne({ email: adminEmail });
 
     if (!adminExists) {
