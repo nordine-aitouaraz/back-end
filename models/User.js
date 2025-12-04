@@ -4,12 +4,19 @@ import bcrypt from "bcrypt";
 const UserSchema = new mongoose.Schema(
   {
     id_user: { type: String, unique: true },
-    nom: { type: String, required: true, trim: true },
     prenom: { type: String, required: true, trim: true },
+    nom: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, "Email invalide"],
+    },
     // DON'T return password by default
     password: { type: String, required: true, select: false, minlength: 6 },
     role: { type: String, enum: ["user", "admin"], default: "user" },
-    telephone: { type: String, required: true, unique: true, trim: true },
   },
   { timestamps: true }
 );

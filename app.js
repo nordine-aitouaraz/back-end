@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
 import morgan from "morgan";
+import cors from "cors";
 import errorHandler from "./middleware/errorHandler.js";
 
 import authRoutes from "./routes/auth.js";
@@ -21,6 +22,7 @@ const app = express();
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.use(helmet());
+app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
