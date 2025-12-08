@@ -11,7 +11,8 @@ import categoriesRoutes from "./routes/categories.js";
 import universesRoutes from "./routes/universes.js";
 import favoritesRoutes from "./routes/favorites.js";
 import uploadRoutes from "./routes/upload.js";
-import cartRoutes from "./routes/cart.js"; 
+import cartRoutes from "./routes/cart.js";
+import ordersRoutes from "./routes/orders.js"; // ✅ NOUVEAU
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +35,8 @@ app.use("/api/categories", categoriesRoutes);
 app.use("/api/universes", universesRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/api/cart", cartRoutes); 
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", ordersRoutes); // ✅ NOUVEAU
 
 app.use((req, res) => res.status(404).json({ success: false, message: "Not Found" }));
 app.use(errorHandler);
