@@ -35,7 +35,12 @@ const seedDatabase = async () => {
     ]);
     console.log("✅ Catégories créées.");
 
-    // 4. CRÉATION DES UNIVERS (exemple)
+    // 4. CRÉATION DES UNIVERS
+    await Universe.create({
+      name: "Dragon Ball",
+      description: "L'univers des Saiyans et des guerriers Z",
+      image: "/images/universes/dragonball.jpg",
+    });
     await Universe.create({
       name: "Naruto",
       description: "L'univers ninja de Konoha et ses villages",
@@ -47,14 +52,9 @@ const seedDatabase = async () => {
       image: "/images/universes/onepiece.jpg",
     });
     await Universe.create({
-      name: "Dragon Ball Z",
-      description: "Les combattants Saiyans et guerriers Z",
-      image: "/images/universes/dbz.jpg",
-    });
-    await Universe.create({
-      name: "Attack on Titan",
-      description: "L'humanité face aux Titans",
-      image: "/images/universes/aot.jpg",
+      name: "Ghibli",
+      description: "Les mondes magiques du Studio Ghibli",
+      image: "/images/universes/ghibli.jpg",
     });
     await Universe.create({
       name: "Demon Slayer",
@@ -64,10 +64,10 @@ const seedDatabase = async () => {
     console.log("✅ Univers créés.");
 
     // 5. RÉCUPÉRATION DES IDs POUR LES RELATIONS
+    const dragonBall = await Universe.findOne({ name: "Dragon Ball" });
     const naruto = await Universe.findOne({ name: "Naruto" });
     const onePiece = await Universe.findOne({ name: "One Piece" });
-    const dbz = await Universe.findOne({ name: "Dragon Ball Z" });
-    const aot = await Universe.findOne({ name: "Attack on Titan" });
+    const ghibli = await Universe.findOne({ name: "Ghibli" });
     const demonSlayer = await Universe.findOne({ name: "Demon Slayer" });
 
     const catPieces = await Category.findOne({ name: "Pièces d'échecs" });
@@ -77,302 +77,264 @@ const seedDatabase = async () => {
 
     // 6. CRÉATION DES PRODUITS
     const products = [
-      // NARUTO
+      // ========== DRAGON BALL ==========
       {
-        name: "Échiquier Konoha Deluxe",
+        name: "Jeu de Pièces 'Saiyans vs Freezer'",
         description:
-          "Échiquier aux couleurs du village de Konoha avec finitions premium",
-        price: 89.99,
+          "Set de pièces d'échecs représentant les guerriers Saiyans contre l'armée de Freezer. Détails sculptés de haute qualité.",
+        price: 45.99,
+        stock: 30,
+        image: "/images/products/dbz-pièces-sayan-vs-vilains.jpg",
+        universe: dragonBall._id,
+        category: catPieces._id,
+      },
+      {
+        name: "Plateau 'Tenkaichi Budokai'",
+        description:
+          "Échiquier inspiré de l'arène du Tenkaichi Budokai, le plus grand tournoi d'arts martiaux.",
+        price: 62.99,
         stock: 25,
-        image: "/images/products/naruto-konoha-board.jpg",
-        universe: naruto._id,
+        image: "/images/products/dbz-plateau-tenkaichi-budokai.jpg",
+        universe: dragonBall._id,
         category: catEchiquiers._id,
       },
       {
-        name: "Échiquier Akatsuki Édition Limitée",
+        name: "Horloge 'Radar Dragon'",
         description:
-          "Échiquier sombre avec le logo Akatsuki, édition numérotée",
-        price: 129.99,
-        stock: 10,
-        image: "/images/products/naruto-akatsuki-board.jpg",
-        universe: naruto._id,
-        category: catCollectors._id,
-      },
-      {
-        name: "Pièces Équipe 7",
-        description:
-          "Set de pièces représentant Naruto, Sasuke, Sakura et Kakashi",
-        price: 49.99,
-        stock: 40,
-        image: "/images/products/naruto-team7-pieces.jpg",
-        universe: naruto._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Pièces Hokage Legends",
-        description: "Collection de pièces des 7 Hokages de Konoha",
-        price: 69.99,
-        stock: 30,
-        image: "/images/products/naruto-hokage-pieces.jpg",
-        universe: naruto._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Boîte de Rangement Naruto",
-        description: "Boîte en bois gravée avec symbole du village de Konoha",
+          "Horloge murale design inspirée du radar à Dragon Balls. Parfait pour décorer votre espace geek.",
         price: 34.99,
-        stock: 50,
-        image: "/images/products/naruto-storage-box.jpg",
-        universe: naruto._id,
-        category: catAccessoires._id,
-      },
-      {
-        name: "Pièces Bronze Vintage Naruto",
-        description:
-          "Pièces en bronze vieilli représentant les personnages emblématiques",
-        price: 159.99,
-        stock: 8,
-        image: "/images/products/naruto-bronze-pieces.jpg",
-        universe: naruto._id,
-        category: catCollectors._id,
-      },
-
-      // ONE PIECE
-      {
-        name: "Échiquier Going Merry",
-        description: "Échiquier en forme du premier navire de Luffy",
-        price: 99.99,
-        stock: 20,
-        image: "/images/products/onepiece-merry-board.jpg",
-        universe: onePiece._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Échiquier Grand Line Map",
-        description: "Échiquier avec carte de Grand Line intégrée",
-        price: 79.99,
-        stock: 35,
-        image: "/images/products/onepiece-grandline-board.jpg",
-        universe: onePiece._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Pièces Équipage Chapeau de Paille",
-        description:
-          "Set complet avec Luffy, Zoro, Nami, Sanji et tout l'équipage",
-        price: 59.99,
-        stock: 45,
-        image: "/images/products/onepiece-crew-pieces.jpg",
-        universe: onePiece._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Pièces Empereurs et Amiraux",
-        description: "Collection des Yonko et Amiraux de la Marine",
-        price: 89.99,
-        stock: 22,
-        image: "/images/products/onepiece-emperors-pieces.jpg",
-        universe: onePiece._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Horloge d'Échecs One Piece",
-        description:
-          "Pendule d'échecs avec design One Piece et son du Gong Gong",
-        price: 44.99,
-        stock: 30,
-        image: "/images/products/onepiece-clock.jpg",
-        universe: onePiece._id,
-        category: catAccessoires._id,
-      },
-
-      // DRAGON BALL Z
-      {
-        name: "Échiquier Cell Games Arena",
-        description: "Échiquier reproduisant l'arène du Cell Game",
-        price: 94.99,
-        stock: 18,
-        image: "/images/products/dbz-cellgames-board.jpg",
-        universe: dbz._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Échiquier Capsule Corp",
-        description: "Échiquier moderne aux couleurs de Capsule Corporation",
-        price: 84.99,
-        stock: 28,
-        image: "/images/products/dbz-capsulecorp-board.jpg",
-        universe: dbz._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Pièces Guerriers Z",
-        description: "Goku, Vegeta, Gohan, Piccolo et les héros de la Terre",
-        price: 54.99,
-        stock: 55,
-        image: "/images/products/dbz-zwarriors-pieces.jpg",
-        universe: dbz._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Pièces Saga Freezer",
-        description: "Set incluant Freezer, Ginyu Force et les transformations",
-        price: 64.99,
-        stock: 32,
-        image: "/images/products/dbz-freezer-pieces.jpg",
-        universe: dbz._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Tapis de Jeu DBZ",
-        description: "Tapis néoprène représentant la planète Namek",
-        price: 29.99,
-        stock: 60,
-        image: "/images/products/dbz-playmat.jpg",
-        universe: dbz._id,
-        category: catAccessoires._id,
-      },
-
-      // ATTACK ON TITAN
-      {
-        name: "Échiquier Murs de l'Humanité",
-        description: "Échiquier circulaire représentant les trois murs",
-        price: 109.99,
-        stock: 15,
-        image: "/images/products/aot-walls-board.jpg",
-        universe: aot._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Échiquier Bataillon d'Exploration",
-        description: "Design militaire avec les ailes de la liberté",
-        price: 89.99,
-        stock: 24,
-        image: "/images/products/aot-scout-board.jpg",
-        universe: aot._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Pièces Eren vs Annie",
-        description: "Set représentant le combat des Titans",
-        price: 74.99,
-        stock: 20,
-        image: "/images/products/aot-eren-annie-pieces.jpg",
-        universe: aot._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Pièces Escouade Livaï",
-        description: "Livaï, Erwin, Hanji et l'élite du Bataillon",
-        price: 69.99,
-        stock: 28,
-        image: "/images/products/aot-levi-squad-pieces.jpg",
-        universe: aot._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Porte-Pièces Attack on Titan",
-        description: "Support en métal avec logo gravé des ailes de la liberté",
-        price: 39.99,
-        stock: 35,
-        image: "/images/products/aot-piece-holder.jpg",
-        universe: aot._id,
-        category: catAccessoires._id,
-      },
-
-      // DEMON SLAYER
-      {
-        name: "Échiquier Montagnes de Kimetsu",
-        description: "Échiquier inspiré des montagnes où s'entraîne Tanjiro",
-        price: 92.99,
-        stock: 22,
-        image: "/images/products/ds-mountain-board.jpg",
-        universe: demonSlayer._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Échiquier Manoir des Papillons",
-        description: "Design élégant du manoir de Shinobu Kocho",
-        price: 99.99,
-        stock: 16,
-        image: "/images/products/ds-butterfly-board.jpg",
-        universe: demonSlayer._id,
-        category: catEchiquiers._id,
-      },
-      {
-        name: "Pièces Piliers Hashira",
-        description: "Les 9 Piliers de l'armée des pourfendeurs de démons",
-        price: 79.99,
-        stock: 26,
-        image: "/images/products/ds-hashira-pieces.jpg",
-        universe: demonSlayer._id,
-        category: catPieces._id,
-      },
-      {
-        name: "Pièces Tanjiro & Nezuko",
-        description: "Set centré sur les héros principaux et leurs alliés",
-        price: 54.99,
         stock: 40,
-        image: "/images/products/ds-tanjiro-nezuko-pieces.jpg",
-        universe: demonSlayer._id,
+        image: "/images/products/dbz-horloge-radar.jpg",
+        universe: dragonBall._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Boîte de Rangement 'Capsule Corp'",
+        description:
+          "Boîte de rangement aux couleurs de Capsule Corporation pour stocker vos pièces d'échecs.",
+        price: 28.99,
+        stock: 35,
+        image: "/images/products/dbz-boite-capsule-corp.jpg",
+        universe: dragonBall._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Set Premium 'Invocation Shenron'",
+        description:
+          "Édition collector avec échiquier, pièces premium et figurine Shenron. Coffret luxe numéroté.",
+        price: 79.99,
+        stock: 15,
+        image: "/images/products/dbz-set-premium-shenron.jpg",
+        universe: dragonBall._id,
+        category: catCollectors._id,
+      },
+
+      // ========== NARUTO ==========
+      {
+        name: "Jeu de Pièces 'Volonté du Feu vs Akatsuki'",
+        description:
+          "Affrontement épique entre les ninjas de Konoha et l'organisation Akatsuki. Pièces détaillées et peintes à la main.",
+        price: 48.99,
+        stock: 28,
+        image: "/images/products/naruto-pieces-naruto-vs-akatsuki.jpg",
+        universe: naruto._id,
         category: catPieces._id,
       },
       {
-        name: "Livre de Notation Demon Slayer",
-        description: "Carnet de notation avec motifs traditionnels japonais",
-        price: 19.99,
-        stock: 70,
-        image: "/images/products/ds-notation-book.jpg",
-        universe: demonSlayer._id,
-        category: catAccessoires._id,
-      },
-
-      // CROSSOVER / MULTI-UNIVERS (on utilise Naruto comme univers par défaut)
-      {
-        name: "Échiquier Crossover Anime",
-        description: "Échiquier neutre compatible avec tous les univers",
-        price: 69.99,
-        stock: 50,
-        image: "/images/products/crossover-board.jpg",
+        name: "Plateau 'Vallée de la Fin'",
+        description:
+          "Échiquier représentant le lieu légendaire du combat final entre Naruto et Sasuke.",
+        price: 58.99,
+        stock: 22,
+        image: "/images/products/naruto-plateau-vallee-fin.jpg",
         universe: naruto._id,
         category: catEchiquiers._id,
       },
       {
-        name: "Pack Découverte Débutant",
-        description: "Kit complet pour débuter: échiquier, pièces et guide",
-        price: 119.99,
-        stock: 35,
-        image: "/images/products/starter-pack.jpg",
-        universe: naruto._id,
-        category: catCollectors._id,
-      },
-      {
-        name: "Pièces Villains Collection",
-        description: "Tous les grands méchants des différents univers anime",
-        price: 89.99,
-        stock: 18,
-        image: "/images/products/villains-pieces.jpg",
-        universe: naruto._id,
-        category: catCollectors._id,
-      },
-      {
-        name: "Sacoche de Transport Premium",
+        name: "Boîte de Rangement 'Parchemin Interdit'",
         description:
-          "Sac de transport en cuir synthétique pour échiquier et pièces",
-        price: 49.99,
+          "Boîte en forme de parchemin pour ranger vos pièces d'échecs avec style ninja.",
+        price: 26.99,
         stock: 45,
-        image: "/images/products/premium-bag.jpg",
+        image: "/images/products/naruto-boite-parchemin.jpg",
         universe: naruto._id,
         category: catAccessoires._id,
       },
       {
-        name: "Échiquier LED Customisable",
-        description: "Échiquier électronique avec LEDs RGB programmables",
-        price: 199.99,
-        stock: 12,
-        image: "/images/products/led-board.jpg",
+        name: "Horloge 'Sharingan'",
+        description:
+          "Horloge murale avec motif Sharingan animé. Les aiguilles représentent les tomoe.",
+        price: 38.99,
+        stock: 32,
+        image: "/images/products/naruto-horloge-sharingan.jpg",
+        universe: naruto._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Pièces 'Kage Summit' (Édition Luxe)",
+        description:
+          "Collection premium des 5 Kage avec socles gravés. Édition limitée avec certificat d'authenticité.",
+        price: 74.99,
+        stock: 18,
+        image: "/images/products/naruto-pieces-luxe-kage.jpg",
         universe: naruto._id,
         category: catCollectors._id,
+      },
+
+      // ========== ONE PIECE ==========
+      {
+        name: "Plateau 'Carte de Grand Line'",
+        description:
+          "Échiquier représentant la carte de Grand Line avec ses différentes îles et routes.",
+        price: 56.99,
+        stock: 26,
+        image: "/images/products/onepiece-plateau-carte-grandline.jpg",
+        universe: onePiece._id,
+        category: catEchiquiers._id,
+      },
+      {
+        name: "Jeu de Pièces 'Mugiwaras vs La Marine'",
+        description:
+          "L'équipage du Chapeau de Paille affronte la Marine. Pièces sculptées avec soin.",
+        price: 52.99,
+        stock: 30,
+        image: "/images/products/onepiece-pieces-mugiwaras-marine.jpg",
+        universe: onePiece._id,
+        category: catPieces._id,
+      },
+      {
+        name: "Horloge 'Log Pose'",
+        description:
+          "Horloge en forme de Log Pose, l'outil de navigation indispensable sur Grand Line.",
+        price: 42.99,
+        stock: 24,
+        image: "/images/products/onepiece-horloge-log-pose.jpg",
+        universe: onePiece._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Coffre de Rangement 'Berry'",
+        description:
+          "Coffre au trésor pour ranger vos pièces, décoré avec le symbole des Berry.",
+        price: 32.99,
+        stock: 38,
+        image: "/images/products/onepiece-coffre-berry.jpg",
+        universe: onePiece._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Set de Pions 'Fruits du Démon'",
+        description:
+          "Pions spéciaux en forme de Fruits du Démon. Parfait pour personnaliser vos parties.",
+        price: 36.99,
+        stock: 35,
+        image: "/images/products/onepiece-pions-fruits-demon.jpg",
+        universe: onePiece._id,
+        category: catAccessoires._id,
+      },
+
+      // ========== GHIBLI ==========
+      {
+        name: "Jeu de Pièces 'Esprits de la Forêt'",
+        description:
+          "Pièces inspirées des créatures magiques des films du Studio Ghibli. Design poétique et enchanteur.",
+        price: 49.99,
+        stock: 22,
+        image: "/images/products/ghibli-pieces-esprits-foret.jpg",
+        universe: ghibli._id,
+        category: catPieces._id,
+      },
+      {
+        name: "Plateau 'Le Voyage de Chihiro'",
+        description:
+          "Échiquier illustrant les bains de Yubaba et l'univers onirique du Voyage de Chihiro.",
+        price: 64.99,
+        stock: 20,
+        image: "/images/products/ghibli-plateau-chihiro.jpg",
+        universe: ghibli._id,
+        category: catEchiquiers._id,
+      },
+      {
+        name: "Horloge 'Calcifer' (Le Château Ambulant)",
+        description:
+          "Horloge en forme de Calcifer, le démon de feu du Château Ambulant. LED intégrées.",
+        price: 44.99,
+        stock: 28,
+        image: "/images/products/ghibli-horloge-calcifer.jpg",
+        universe: ghibli._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Boîte 'Robot de Laputa'",
+        description:
+          "Boîte de rangement en métal à l'effigie du robot gardien de Laputa.",
+        price: 29.99,
+        stock: 32,
+        image: "/images/products/ghibli-boite-robot-laputa.jpg",
+        universe: ghibli._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Set Minimaliste 'Princesse Mononoké'",
+        description:
+          "Pièces en bois sculpté inspirées de Princesse Mononoké. Design épuré et élégant.",
+        price: 68.99,
+        stock: 16,
+        image: "/images/products/ghibli-pieces-mononoke-bois.jpg",
+        universe: ghibli._id,
+        category: catCollectors._id,
+      },
+
+      // ========== DEMON SLAYER ==========
+      {
+        name: "Boîte de Rangement 'La Boîte de Nezuko'",
+        description:
+          "Réplique de la boîte que porte Tanjiro pour transporter Nezuko. Parfaite pour ranger vos pièces.",
+        price: 35.99,
+        stock: 40,
+        image: "/images/products/demonslayer-boite-nezuko.jpg",
+        universe: demonSlayer._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Jeu de Pièces 'Piliers vs Lunes Démoniaques'",
+        description:
+          "Affrontement entre les 9 Piliers et les Lunes Démoniaques. Finitions premium avec détails impressionnants.",
+        price: 54.99,
+        stock: 24,
+        image: "/images/products/demonslayer-pieces-piliers-vs-lunes.jpg",
+        universe: demonSlayer._id,
+        category: catPieces._id,
+      },
+      {
+        name: "Plateau 'Tatami Infini'",
+        description:
+          "Échiquier avec design de tatami japonais traditionnel inspiré du Manoir de l'Infini.",
+        price: 59.99,
+        stock: 20,
+        image: "/images/products/demonslayer-plateau-tatami.jpg",
+        universe: demonSlayer._id,
+        category: catEchiquiers._id,
+      },
+      {
+        name: "Horloge 'Garde de Katana' (Tsuba)",
+        description:
+          "Horloge murale en forme de tsuba (garde de sabre) avec motifs traditionnels japonais.",
+        price: 39.99,
+        stock: 30,
+        image: "/images/products/demonslayer-horloge-tsuba.jpg",
+        universe: demonSlayer._id,
+        category: catAccessoires._id,
+      },
+      {
+        name: "Pièces 'Masques de Forgerons'",
+        description:
+          "Collection de pièces représentant les forgerons de sabres avec leurs masques emblématiques.",
+        price: 46.99,
+        stock: 26,
+        image: "/images/products/demonslayer-pieces-masques-forgerons.jpg",
+        universe: demonSlayer._id,
+        category: catPieces._id,
       },
     ];
 
