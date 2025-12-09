@@ -15,11 +15,6 @@ app.set("port", port);
 
 const server = http.createServer(app);
 
-// ✅ Health check AVANT les erreurs
-app.get('/health', (req, res) => {
-  return res.status(200).json({ success: true, status: 'ok' });
-});
-
 const errorHandler = error => {
   if (error.syscall !== "listen") throw error;
   const address = server.address();
