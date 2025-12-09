@@ -38,57 +38,7 @@ app.use(helmet());
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
-// ✅ Middleware pour transformer les URLs relatives en absolues
-app.use((req, res, next) => {
-  const originalJson = res.json;
-  
-  res.json = function(data) {
-    const baseUrl = 'https://apianime.alwaysdata.net';
-    
-    // Transformer les images en URLs absolues
-    const transformData = (obj) => {
-      if (Array.isArray(obj)) {
-        return obj.map(item => transformData(item));
-      }
-      
-      if (obj && typeof obj === 'object') {
-        const transformed = { ...obj };
-        
-        // Transformer les chemins d'images
-        if (transformed.image && typeof transformed.image === 'string' && transformed.image.startsWith('/')) {
-          transformed.image = `${baseUrl}${transformed.image}`;
-        }
-        
-        // Transformer les images dans les univers
-        if (transformed.universe?.image && typeof transformed.universe.image === 'string' && transformed.universe.image.startsWith('/')) {
-          transformed.universe.image = `${baseUrl}${transformed.universe.image}`;
-        }
-        
-        // Transformer les images dans les produits (panier, commandes)
-        if (transformed.product?.image && typeof transformed.product.image === 'string' && transformed.product.image.startsWith('/')) {
-          transformed.product.image = `${baseUrl}${transformed.product.image}`;
-        }
-        
-        // Récursivement transformer les données imbriquées
-        for (let key in transformed) {
-          if (transformed[key] && typeof transformed[key] === 'object') {
-            transformed[key] = transformData(transformed[key]);
-          }
-        }
-        
-        return transformed;
-      }
-      
-      return obj;
-    };
-    
-    const transformed = transformData(data);
-    return originalJson.call(this, transformed);
-  };
-  
-  next();
-});
-
+// Routes
 app.get("/", (req, res) => {
   res.json({ success: true, message: "API Echecs Mangas" });
 });
@@ -102,7 +52,10 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", ordersRoutes);
 
+// 404
 app.use((req, res) => res.status(404).json({ success: false, message: "Not Found" }));
+
+// Error handler
 app.use(errorHandler);
 
 export default app;
