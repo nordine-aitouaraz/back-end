@@ -2,7 +2,6 @@ import "dotenv/config";
 import http from "http";
 import mongoose from "mongoose";
 import app from "./app.js";
-import cors from 'cors';
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
@@ -15,15 +14,6 @@ const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 const server = http.createServer(app);
-
-app.use(cors({
-  origin: ['http://localhost:5173','http://localhost:3000','https://apianime.alwaysdata.net'],
-  credentials: true
-}));
-
-app.get('/health', (req, res) => {
-  return res.status(200).json({ success: true, status: 'ok' });
-});
 
 const errorHandler = error => {
   if (error.syscall !== "listen") throw error;
