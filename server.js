@@ -55,7 +55,7 @@ mongoose
     process.exit(1);
   });
 
-// graceful shutdown
+// Graceful shutdown
 process.on("SIGINT", async () => {
   try {
     await mongoose.disconnect();
