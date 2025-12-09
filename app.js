@@ -43,6 +43,10 @@ app.get("/", (req, res) => {
   res.json({ success: true, message: "API Echecs Mangas" });
 });
 
+app.get('/health', (req, res) => {
+  return res.status(200).json({ success: true, status: 'ok' });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/categories", categoriesRoutes);
