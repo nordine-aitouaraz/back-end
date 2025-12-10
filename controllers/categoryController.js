@@ -1,4 +1,3 @@
-import Category from "../models/Category.js";
 import Product from "../models/Product.js";
 
 // @desc    Récupérer toutes les catégories
@@ -6,7 +5,12 @@ import Product from "../models/Product.js";
 // @access  Public
 export const getAllCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find();
+    // Liste statique des catégories
+    const categories = [
+      { _id: "Échiquier", name: "Échiquier" },
+      { _id: "Pièces d'échec", name: "Pièces d'échec" },
+      { _id: "Accessoires", name: "Accessoires" },
+    ];
 
     res.status(200).json({
       success: true,
@@ -18,14 +22,15 @@ export const getAllCategories = async (req, res, next) => {
   }
 };
 
-// @desc    Récupérer une catégorie par ID
+// @desc    Récupérer une catégorie par ID (Nom)
 // @route   GET /api/categories/:id
 // @access  Public
 export const getCategoryById = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const categoryName = req.params.id;
+    const validCategories = ["Échiquier", "Pièces d'échec", "Accessoires"];
 
-    if (!category) {
+    if (!validCategories.includes(categoryName)) {
       return res.status(404).json({
         success: false,
         message: "Catégorie non trouvée",
@@ -34,7 +39,7 @@ export const getCategoryById = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: category,
+      data: { _id: categoryName, name: categoryName },
     });
   } catch (error) {
     next(error);
@@ -46,23 +51,16 @@ export const getCategoryById = async (req, res, next) => {
 // @access  Public
 export const getProductsByCategory = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const categoryName = req.params.id;
 
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: "Catégorie non trouvée",
-      });
-    }
-
-    const products = await Product.find({ category: req.params.id }).populate(
+    const products = await Product.find({ category: categoryName }).populate(
       "universe",
       "name"
     );
 
     res.status(200).json({
       success: true,
-      category: category.name,
+      category: categoryName,
       count: products.length,
       data: products,
     });
@@ -75,65 +73,25 @@ export const getProductsByCategory = async (req, res, next) => {
 // @route   POST /api/categories
 // @access  Private
 export const createCategory = async (req, res, next) => {
-  try {
-    const category = await Category.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      message: "Catégorie créée avec succès",
-      data: category,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res
+    .status(400)
+    .json({ success: false, message: "Les catégories sont statiques." });
 };
 
 // @desc    Mettre à jour une catégorie
 // @route   PUT /api/categories/:id
 // @access  Private
 export const updateCategory = async (req, res, next) => {
-  try {
-    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: "Catégorie non trouvée",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Catégorie mise à jour",
-      data: category,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res
+    .status(400)
+    .json({ success: false, message: "Les catégories sont statiques." });
 };
 
 // @desc    Supprimer une catégorie
 // @route   DELETE /api/categories/:id
 // @access  Private
 export const deleteCategory = async (req, res, next) => {
-  try {
-    const category = await Category.findByIdAndDelete(req.params.id);
-
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: "Catégorie non trouvée",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Catégorie supprimée",
-    });
-  } catch (error) {
-    next(error);
-  }
+  res
+    .status(400)
+    .json({ success: false, message: "Les catégories sont statiques." });
 };

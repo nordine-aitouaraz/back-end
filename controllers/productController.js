@@ -21,9 +21,7 @@ export const getAllProducts = async (req, res, next) => {
     }
 
     // Exécution de la requête
-    let productsQuery = Product.find(query)
-      .populate("universe", "name image")
-      .populate("category", "name");
+    let productsQuery = Product.find(query).populate("universe", "name image");
 
     // Tri
     if (sort === "price-asc") productsQuery = productsQuery.sort({ price: 1 });
@@ -52,9 +50,7 @@ export const getAllProducts = async (req, res, next) => {
 // @access  Public
 export const getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
-      .populate("universe")
-      .populate("category");
+    const product = await Product.findById(req.params.id).populate("universe");
 
     if (!product) {
       return res.status(404).json({
@@ -84,13 +80,17 @@ export const createProduct = async (req, res, next) => {
     if (price === undefined) errors.push("Le prix est obligatoire");
     else {
       const parsedPrice = Number(price);
-      if (Number.isNaN(parsedPrice) || parsedPrice < 0) errors.push("Le prix doit être un nombre positif");
+      if (Number.isNaN(parsedPrice) || parsedPrice < 0)
+        errors.push("Le prix doit être un nombre positif");
     }
     if (!category) errors.push("La catégorie est obligatoire");
     if (!universe) errors.push("L'univers est obligatoire");
     if (!image) errors.push("L'image est obligatoire");
 
-    if (errors.length) return res.status(400).json({ success: false, message: "Erreur de validation", errors });
+    if (errors.length)
+      return res
+        .status(400)
+        .json({ success: false, message: "Erreur de validation", errors });
 
     const productData = { ...req.body, price: Number(price) };
     const product = await Product.create(productData);

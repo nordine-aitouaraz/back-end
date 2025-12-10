@@ -29,14 +29,13 @@ const ProductSchema = new mongoose.Schema(
       default: 0,
     },
     universe: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Universe",
+      type: String,
       required: [true, "L'univers est obligatoire"],
     },
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: [true, "La catégorie est obligatoire"],
+      enum: ["Échiquier", "Pièces d'échec", "Accessoires"],
     },
     featured: {
       type: Boolean,
