@@ -96,7 +96,3 @@ export const updateUniverse = async (req, res, next) => {
 export const deleteUniverse = async (req, res, next) => {
   res.status(400).json({ success: false, message: "Les univers sont statiques." });
 };
-  } catch (error) {
-    next(error);
-  }
-};
