@@ -22,7 +22,12 @@ const app = express();
 
 // ✅ CORS global
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://apianime.alwaysdata.net'],
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://apianime.alwaysdata.net',
+    'https://hassane-soulaimana.students-laplateforme.io'
+  ],
   credentials: true
 }));
 
