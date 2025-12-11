@@ -55,6 +55,8 @@ app.use("/api/favorites", favoritesRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", ordersRoutes);
+import usersRoutes from "./routes/users.js";
+app.use("/api/users", usersRoutes);
 
 // 404
 app.use((req, res) => res.status(404).json({ success: false, message: "Not Found" }));

@@ -1,3 +1,14 @@
+// @desc    Récupérer tous les utilisateurs (admin)
+// @route   GET /api/users
+// @access  Private/Admin
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({}, '-password');
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    next(error);
+  }
+};
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
@@ -78,6 +89,38 @@ export const register = async (req, res, next) => {
     next(error);
   }
 };
+
+  // @desc    Changer le rôle d'un utilisateur
+  // @route   PUT /api/auth/role/:id
+  // @access  Private/Admin
+  export const updateUserRole = async (req, res, next) => {
+    try {
+      const { role } = req.body;
+      const { id } = req.params;
+      if (!role || !["user", "admin"].includes(role)) {
+        return res.status(400).json({ success: false, message: "Rôle invalide" });
+      }
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
+      }
+      user.role = role;
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: "Rôle mis à jour",
+        data: {
+          id: user._id,
+          prenom: user.prenom,
+          nom: user.nom,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
 export const login = async (req, res, next) => {
   try {
