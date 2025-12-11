@@ -134,9 +134,9 @@ export const login = async (req, res, next) => {
 };
 
 // @desc    Récupérer le profil de l'utilisateur connecté
-// @route   GET /api/auth/me
+// @route   GET /api/auth/profile
 // @access  Private
-export const getMe = async (req, res, next) => {
+export const getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -153,6 +153,115 @@ export const getMe = async (req, res, next) => {
         email: user.email,
         role: user.role,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Mettre à jour le profil
+// @route   PUT /api/auth/profile
+// @access  Private
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { prenom, nom, email } = req.body;
+
+    // Vérifier si l'email existe déjà pour un autre utilisateur
+    if (email && email !== req.user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Cet email est déjà utilisé",
+        });
+      }
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    // Mettre à jour les champs
+    if (prenom) user.prenom = prenom;
+    if (nom) user.nom = nom;
+    if (email) user.email = email;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profil mis à jour",
+      data: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Changer le mot de passe
+// @route   PUT /api/auth/password
+// @access  Private
+export const updatePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez remplir tous les champs",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Les mots de passe ne correspondent pas",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Le mot de passe doit contenir au moins 6 caractères",
+      });
+    }
+
+    // Récupérer l'utilisateur avec le mot de passe
+    const user = await User.findById(req.user._id).select("+password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    // Vérifier l'ancien mot de passe
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Mot de passe actuel incorrect",
+      });
+    }
+
+    // Mettre à jour le mot de passe
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Mot de passe mis à jour avec succès",
     });
   } catch (error) {
     next(error);
